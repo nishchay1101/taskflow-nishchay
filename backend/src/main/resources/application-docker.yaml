@@ -1,0 +1,3 @@
+# Profile active in Docker — overrides only what differs
+logging:
+  config: classpath:logback-spring.xml
