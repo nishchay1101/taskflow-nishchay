@@ -1,7 +1,6 @@
 package com.taskflow.common;
 
 import com.taskflow.common.exception.DuplicateEmailException;
-import com.taskflow.common.exception.ForbiddenException;
 import com.taskflow.common.exception.InvalidCredentialsException;
 import com.taskflow.common.exception.ResourceNotFoundException;
 import com.taskflow.common.exception.ForbiddenException;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -79,28 +79,38 @@ public class GlobalExceptionHandler {
         return Map.of("error", ex.getMessage());
     }
 
-    // 500 — Catch-all (never expose internals)
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleGeneric(Exception ex, HttpServletRequest request) {
-        log.error("Unhandled exception on {} {}", request.getMethod(), request.getRequestURI(), ex);
-        return Map.of("error", "internal_server_error");
-    }
-
-    // Enum binding error
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        String paramName = ex.getName();
-        String value = ex.getValue() != null ? ex.getValue().toString() : "null";
+    public Map<String, Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
+                                                HttpServletRequest request) {
         Class<?> type = ex.getRequiredType();
-        
-        String message = type != null && type.isEnum()
+        String message = (type != null && type.isEnum())
                 ? "must be one of: " + Arrays.stream(type.getEnumConstants())
                     .map(Object::toString)
                     .collect(Collectors.joining(", "))
-                : "invalid value: " + value;
+                : "invalid value: " + ex.getValue();
+        log.warn("Type mismatch on {} {}: param={} {}",
+                request.getMethod(), request.getRequestURI(), ex.getName(), message);
+        return Map.of("error", "validation_failed", "fields", Map.of(ex.getName(), message));
+    }
 
-        return Map.of("error", "validation_failed", "fields", Map.of(paramName, message));
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleUnreadable(HttpMessageNotReadableException ex,
+                                                HttpServletRequest request) {
+        log.warn("Malformed request body on {} {}: {}",
+                request.getMethod(), request.getRequestURI(), ex.getMessage());
+        return Map.of("error", "malformed request body");
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleGeneric(Exception ex, HttpServletRequest request) {
+        log.error("Unhandled exception {} {}: {}",
+                request.getMethod(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);  // passes full stack trace to logger, not to client
+        return Map.of("error", "internal_server_error");
     }
 }
