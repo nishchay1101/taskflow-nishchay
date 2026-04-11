@@ -16,7 +16,10 @@ services:
       - "5433:5432"
 
   api:
-    build: ./backend
+    # Option A — fastest: pull pre-built image, no compilation needed
+    image: gotsphinx/taskflow-api:latest
+    # Option B — build from source (comment out image: above and uncomment below)
+    # build: ./backend
     depends_on:
       db:
         condition: service_healthy

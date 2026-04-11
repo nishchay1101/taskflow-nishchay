@@ -29,7 +29,11 @@ The focus is on correctness, clean API design, and production patterns — not f
 - Docker and Docker Compose installed
 - Nothing running on port 8080
 
-### Steps
+---
+
+### ⚡ Option A — Pre-built image (fastest, ~30 seconds)
+
+No compilation. Docker pulls the pre-built image directly from Docker Hub.
 
 ```bash
 # 1. Clone the repo
@@ -39,9 +43,33 @@ cd taskflow-nishchay
 # 2. Copy env file
 cp .env.example .env
 
-# 3. Start everything
+# 3. Pull and start
+docker compose up -d
+```
+
+The `docker-compose.yml` is already configured to use `gotsphinx/taskflow-api:latest` — no changes needed.
+
+---
+
+### 🔨 Option B — Build from source (~3-5 min)
+
+If you want to compile the code yourself:
+
+```bash
+# 1. Clone and copy env
+git clone https://github.com/nishchay1101/taskflow-nishchay.git
+cd taskflow-nishchay
+cp .env.example .env
+
+# 2. In docker-compose.yml, comment out the image: line and uncomment build:
+#    image: nishchay1101/taskflow-api:latest  ← comment this out
+#    build: ./backend                          ← uncomment this
+
+# 3. Build and start
 docker compose up --build
 ```
+
+---
 
 That's it. Flyway migrations run automatically on startup. The API is available at `http://localhost:8080`.
 
