@@ -9,7 +9,7 @@ CREATE TABLE tasks (
     project_id  UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
     assignee_id UUID REFERENCES users(id) ON DELETE SET NULL,
     creator_id  UUID REFERENCES users(id) ON DELETE SET NULL,
-    due_date    TIMESTAMPTZ,
+    due_date    DATE,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

@@ -4,6 +4,7 @@ import com.taskflow.common.exception.DuplicateEmailException;
 import com.taskflow.common.exception.ForbiddenException;
 import com.taskflow.common.exception.InvalidCredentialsException;
 import com.taskflow.common.exception.ResourceNotFoundException;
+import com.taskflow.common.exception.ForbiddenException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -80,5 +85,22 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleGeneric(Exception ex, HttpServletRequest request) {
         log.error("Unhandled exception on {} {}", request.getMethod(), request.getRequestURI(), ex);
         return Map.of("error", "internal_server_error");
+    }
+
+    // Enum binding error
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String paramName = ex.getName();
+        String value = ex.getValue() != null ? ex.getValue().toString() : "null";
+        Class<?> type = ex.getRequiredType();
+        
+        String message = type != null && type.isEnum()
+                ? "must be one of: " + Arrays.stream(type.getEnumConstants())
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "))
+                : "invalid value: " + value;
+
+        return Map.of("error", "validation_failed", "fields", Map.of(paramName, message));
     }
 }
