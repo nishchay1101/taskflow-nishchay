@@ -57,6 +57,7 @@ image: gotsphinx/taskflow-api:latest
 ```
 
 Then run `docker compose up`.
+
 ---
 
 That's it. Flyway migrations run automatically on startup. The API is available at `http://localhost:8080`.
