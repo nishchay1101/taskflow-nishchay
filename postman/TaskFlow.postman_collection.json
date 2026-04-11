@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "TaskFlow — Complete Collection",
+    "name": "TaskFlow \u2014 Complete Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -279,7 +279,7 @@
       ]
     },
     {
-      "name": "2. Projects — Seed Data",
+      "name": "2. Projects \u2014 Seed Data",
       "item": [
         {
           "name": "List Arjun projects (owns 2)",
@@ -322,6 +322,12 @@
                   "key": "limit",
                   "value": "2"
                 }
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects"
               ]
             },
             "header": [
@@ -393,7 +399,7 @@
           }
         },
         {
-          "name": "Update Payments project as Priya (expect 403 — not owner)",
+          "name": "Update Payments project as Priya (expect 403 \u2014 not owner)",
           "request": {
             "method": "PATCH",
             "url": "{{base_url}}/projects/{{project_payments_id}}",
@@ -414,7 +420,7 @@
           }
         },
         {
-          "name": "Update Rider project as Arjun (expect 403 — not owner)",
+          "name": "Update Rider project as Arjun (expect 403 \u2014 not owner)",
           "request": {
             "method": "PATCH",
             "url": "{{base_url}}/projects/{{project_rider_id}}",
@@ -448,7 +454,7 @@
           }
         },
         {
-          "name": "Page clamping — page=0 limit=500 (expect 200 clamped)",
+          "name": "Page clamping \u2014 page=0 limit=500 (expect 200 clamped)",
           "request": {
             "method": "GET",
             "url": {
@@ -462,6 +468,12 @@
                   "key": "limit",
                   "value": "500"
                 }
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects"
               ]
             },
             "header": [
@@ -475,7 +487,7 @@
       ]
     },
     {
-      "name": "3. Projects — Create & Delete",
+      "name": "3. Projects \u2014 Create & Delete",
       "item": [
         {
           "name": "Create new project as Arjun",
@@ -532,7 +544,7 @@
           }
         },
         {
-          "name": "Delete new project as Rohan (expect 403 — not owner)",
+          "name": "Delete new project as Rohan (expect 403 \u2014 not owner)",
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/projects/{{new_project_id}}",
@@ -573,7 +585,7 @@
       ]
     },
     {
-      "name": "4. Tasks — Seed Data",
+      "name": "4. Tasks \u2014 Seed Data",
       "item": [
         {
           "name": "List all tasks in Payments project",
@@ -599,6 +611,14 @@
                   "key": "status",
                   "value": "TODO"
                 }
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_payments_id}}",
+                "tasks"
               ]
             },
             "header": [
@@ -620,6 +640,14 @@
                   "key": "status",
                   "value": "IN_PROGRESS"
                 }
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_payments_id}}",
+                "tasks"
               ]
             },
             "header": [
@@ -636,6 +664,14 @@
             "method": "GET",
             "url": {
               "raw": "{{base_url}}/projects/{{project_payments_id}}/tasks?status=DONE",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_payments_id}}",
+                "tasks"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -679,6 +715,14 @@
                   "key": "limit",
                   "value": "2"
                 }
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_payments_id}}",
+                "tasks"
               ]
             },
             "header": [
@@ -704,6 +748,14 @@
                   "key": "limit",
                   "value": "20"
                 }
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_payments_id}}",
+                "tasks"
               ]
             },
             "header": [
@@ -725,6 +777,14 @@
                   "key": "status",
                   "value": "GARBAGE"
                 }
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_payments_id}}",
+                "tasks"
               ]
             },
             "header": [
@@ -736,7 +796,7 @@
           }
         },
         {
-          "name": "Update webhook task status as Arjun (owner — expect 200)",
+          "name": "Update webhook task status as Arjun (owner \u2014 expect 200)",
           "request": {
             "method": "PATCH",
             "url": "{{base_url}}/tasks/{{task_webhook_id}}",
@@ -757,7 +817,7 @@
           }
         },
         {
-          "name": "Update webhook task status as Priya (assignee — expect 200)",
+          "name": "Update webhook task status as Priya (assignee \u2014 expect 200)",
           "request": {
             "method": "PATCH",
             "url": "{{base_url}}/tasks/{{task_webhook_id}}",
@@ -778,7 +838,7 @@
           }
         },
         {
-          "name": "Update webhook task as Rohan (not owner not assignee — expect 403)",
+          "name": "Update webhook task as Rohan (not owner not assignee \u2014 expect 403)",
           "request": {
             "method": "PATCH",
             "url": "{{base_url}}/tasks/{{task_webhook_id}}",
@@ -862,7 +922,7 @@
           }
         },
         {
-          "name": "Delete task as Rohan (not owner not creator — expect 403)",
+          "name": "Delete task as Rohan (not owner not creator \u2014 expect 403)",
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/tasks/{{task_webhook_id}}",
@@ -875,7 +935,7 @@
           }
         },
         {
-          "name": "Delete deprecate task as Arjun (owner and creator — expect 204)",
+          "name": "Delete deprecate task as Arjun (owner and creator \u2014 expect 204)",
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/tasks/{{task_deprecate_id}}",
@@ -901,7 +961,7 @@
           }
         },
         {
-          "name": "Assign webhook task to Rohan (owner sets assigneeId — expect 200)",
+          "name": "Assign webhook task to Rohan (owner sets assigneeId \u2014 expect 200)",
           "request": {
             "method": "PATCH",
             "url": "{{base_url}}/tasks/{{task_webhook_id}}",
@@ -922,7 +982,7 @@
           }
         },
         {
-          "name": "Cascade delete — delete Rider project as Priya (owner — expect 204)",
+          "name": "Cascade delete \u2014 delete Rider project as Priya (owner \u2014 expect 204)",
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/projects/{{project_rider_id}}",
@@ -935,7 +995,7 @@
           }
         },
         {
-          "name": "Cascade delete — tasks of deleted Rider project (expect 404)",
+          "name": "Cascade delete \u2014 tasks of deleted Rider project (expect 404)",
           "request": {
             "method": "GET",
             "url": "{{base_url}}/projects/{{project_rider_id}}/tasks",
@@ -950,10 +1010,10 @@
       ]
     },
     {
-      "name": "5. Tasks — Create",
+      "name": "5. Tasks \u2014 Create",
       "item": [
         {
-          "name": "Create task in Payments project as Arjun (owner — expect 201)",
+          "name": "Create task in Payments project as Arjun (owner \u2014 expect 201)",
           "request": {
             "method": "POST",
             "url": "{{base_url}}/projects/{{project_payments_id}}/tasks",
@@ -987,7 +1047,7 @@
           ]
         },
         {
-          "name": "Create task in Rider project as Arjun (not owner — expect 403)",
+          "name": "Create task in Rider project as Arjun (not owner \u2014 expect 403)",
           "request": {
             "method": "POST",
             "url": "{{base_url}}/projects/{{project_rider_id}}/tasks",
@@ -1050,7 +1110,7 @@
           }
         },
         {
-          "name": "Delete new task (cleanup — expect 204)",
+          "name": "Delete new task (cleanup \u2014 expect 204)",
           "request": {
             "method": "DELETE",
             "url": "{{base_url}}/tasks/{{new_task_id}}",
