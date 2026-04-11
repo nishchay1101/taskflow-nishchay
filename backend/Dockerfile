@@ -4,8 +4,8 @@ WORKDIR /app
 COPY . .
 RUN gradle bootJar --no-daemon
 
-# Stage 2: Runtime
-FROM eclipse-temurin:21-jre-alpine
+# Stage 2: Runtime — debian-slim JRE supports amd64, arm64, arm/v7
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
