@@ -14,14 +14,14 @@ INSERT INTO users (id, name, email, password, created_at) VALUES
     NOW()
 ),
 (
-    'b1ffcd00-1d2c-5fg9-cc7e-7cc0ce491b22',
+    'b1ffcd00-1d2c-4fa9-ac7e-7cc0ce491b22',
     'Priya Mehta',
     'priya@example.com',
     '$2a$12$RgpCbDBKlYvTbBUqKLgGUu/KqGNF8GkM5q3TOFJMOLkC.GZX6BGFW',
     NOW()
 ),
 (
-    'c2ggde11-2e3d-6gh0-dd8f-8dd1df502c33',
+    'c2aade11-2e3d-4ba0-bd8f-8dd1df502c33',
     'Rohan Verma',
     'rohan@example.com',
     '$2a$12$RgpCbDBKlYvTbBUqKLgGUu/KqGNF8GkM5q3TOFJMOLkC.GZX6BGFW',
@@ -34,21 +34,21 @@ INSERT INTO users (id, name, email, password, created_at) VALUES
 -- Project 3: owned by Arjun
 INSERT INTO projects (id, name, description, owner_id, created_at) VALUES
 (
-    'd3hhef22-3f4e-7hi1-ee9g-9ee2eg613d44',
+    'd3bbef22-3f4e-4ba1-ae9a-9ee2ef613d44',
     'Zomato Payments Revamp',
     'Revamping the payment gateway integration for faster checkout',
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     NOW()
 ),
 (
-    'e4iifg33-4g5f-8ij2-ff0h-0ff3fh724e55',
+    'e4ccfa33-4a5f-4bc2-bf0b-0ff3fa724e55',
     'Rider App Redesign',
     'Redesigning the rider-facing mobile app for better UX',
-    'b1ffcd00-1d2c-5fg9-cc7e-7cc0ce491b22',
+    'b1ffcd00-1d2c-4fa9-ac7e-7cc0ce491b22',
     NOW()
 ),
 (
-    'f5jjgh44-5h6g-9jk3-gg1i-1gg4gi835f66',
+    'f5ddab44-5b6a-4cd3-ca1c-1aa4ab835f66',
     'Internal Analytics Dashboard',
     'Build an internal dashboard for ops team to track delivery metrics',
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
@@ -76,8 +76,8 @@ INSERT INTO tasks (id, title, description, status, priority, due_date, project_i
     'IN_PROGRESS',
     'HIGH',
     '2025-06-30',
-    'd3hhef22-3f4e-7hi1-ee9g-9ee2eg613d44',
-    'b1ffcd00-1d2c-5fg9-cc7e-7cc0ce491b22',
+    'd3bbef22-3f4e-4ba1-ae9a-9ee2ef613d44',
+    'b1ffcd00-1d2c-4fa9-ac7e-7cc0ce491b22',
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     NOW(),
     NOW()
@@ -89,8 +89,8 @@ INSERT INTO tasks (id, title, description, status, priority, due_date, project_i
     'TODO',
     'MEDIUM',
     '2025-07-15',
-    'd3hhef22-3f4e-7hi1-ee9g-9ee2eg613d44',
-    'c2ggde11-2e3d-6gh0-dd8f-8dd1df502c33',
+    'd3bbef22-3f4e-4ba1-ae9a-9ee2ef613d44',
+    'c2aade11-2e3d-4ba0-bd8f-8dd1df502c33',
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     NOW(),
     NOW()
@@ -102,7 +102,7 @@ INSERT INTO tasks (id, title, description, status, priority, due_date, project_i
     'DONE',
     'LOW',
     '2025-05-01',
-    'd3hhef22-3f4e-7hi1-ee9g-9ee2eg613d44',
+    'd3bbef22-3f4e-4ba1-ae9a-9ee2ef613d44',
     NULL,
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     NOW(),
@@ -115,9 +115,9 @@ INSERT INTO tasks (id, title, description, status, priority, due_date, project_i
     'TODO',
     'HIGH',
     '2025-08-01',
-    'e4iifg33-4g5f-8ij2-ff0h-0ff3fh724e55',
+    'e4ccfa33-4a5f-4bc2-bf0b-0ff3fa724e55',
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'b1ffcd00-1d2c-5fg9-cc7e-7cc0ce491b22',
+    'b1ffcd00-1d2c-4fa9-ac7e-7cc0ce491b22',
     NOW(),
     NOW()
 ),
@@ -128,21 +128,21 @@ INSERT INTO tasks (id, title, description, status, priority, due_date, project_i
     'IN_PROGRESS',
     'MEDIUM',
     '2025-07-20',
-    'e4iifg33-4g5f-8ij2-ff0h-0ff3fh724e55',
+    'e4ccfa33-4a5f-4bc2-bf0b-0ff3fa724e55',
     NULL,
-    'b1ffcd00-1d2c-5fg9-cc7e-7cc0ce491b22',
+    'b1ffcd00-1d2c-4fa9-ac7e-7cc0ce491b22',
     NOW(),
     NOW()
 ),
 (
-    'f6gg6666-ffff-ffff-ffff-ffffffffffff',
+    'f6aa6666-ffff-ffff-ffff-ffffffffffff',
     'Build delivery heatmap query',
     'Write optimised PostgreSQL query to aggregate delivery counts by geo-grid for heatmap visualisation',
     'DONE',
     'HIGH',
     '2025-05-15',
-    'f5jjgh44-5h6g-9jk3-gg1i-1gg4gi835f66',
-    'c2ggde11-2e3d-6gh0-dd8f-8dd1df502c33',
+    'f5ddab44-5b6a-4cd3-ca1c-1aa4ab835f66',
+    'c2aade11-2e3d-4ba0-bd8f-8dd1df502c33',
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     NOW(),
     NOW()
