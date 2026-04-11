@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,5 +50,28 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     long countByProjectIdFiltered(
             @Param("projectId") UUID projectId,
             @Param("status") TaskStatus status,
-            @Param("assigneeId") UUID assigneeId);      
+            @Param("assigneeId") UUID assigneeId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("DELETE FROM Task t WHERE t.project.id = :projectId")
+    void deleteByProjectId(@Param("projectId") UUID projectId);
+            
+        // Count by status for a project
+        @Query("""
+                SELECT t.status, COUNT(t)
+                FROM Task t
+                WHERE t.project.id = :projectId
+                GROUP BY t.status
+                """)
+        List<Object[]> countByStatus(@Param("projectId") UUID projectId);
+
+        // Count by assignee for a project
+        @Query("""
+                SELECT a, COUNT(t)
+                FROM Task t
+                LEFT JOIN t.assignee a
+                WHERE t.project.id = :projectId
+                GROUP BY a
+                """)
+        List<Object[]> countByAssignee(@Param("projectId") UUID projectId);
 }

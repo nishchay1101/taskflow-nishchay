@@ -183,4 +183,99 @@ public class TaskIntegrationTest extends BaseIntegrationTest {
                 .header("Authorization", "Bearer " + otherToken))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    void listTasks_pagination_returnsPagedResponse() throws Exception {
+        createTask("Task 1", "LOW");
+        createTask("Task 2", "MEDIUM");
+        createTask("Task 3", "HIGH");
+
+        mockMvc.perform(get("/projects/" + projectId + "/tasks?page=1&limit=2")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(2)))
+                .andExpect(jsonPath("$.page").value(1))
+                .andExpect(jsonPath("$.limit").value(2))
+                .andExpect(jsonPath("$.total").value(greaterThanOrEqualTo(3)))
+                .andExpect(jsonPath("$.totalPages").value(greaterThanOrEqualTo(2)));
+    }
+
+    @Test
+    void getStats_returnsCorrectCounts() throws Exception {
+        createTask("Todo task", "LOW");
+        createTask("Another todo", "HIGH");
+
+        mockMvc.perform(get("/projects/" + projectId + "/stats")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.byStatus.TODO").value(greaterThanOrEqualTo(2)))
+                .andExpect(jsonPath("$.total").value(greaterThanOrEqualTo(2)));
+    }
+
+    @Test
+    void pagination_pageExceedsTotal_returnsEmptyData() throws Exception {
+        createTask("Only task", "LOW");
+
+        mockMvc.perform(get("/projects/" + projectId + "/tasks?page=999&limit=20")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(0)))
+                .andExpect(jsonPath("$.page").value(999));
+    }
+
+    @Test
+    void getStats_withUnassignedTasks_showsUnassigned() throws Exception {
+        // create task with no assignee
+        mockMvc.perform(post("/projects/" + projectId + "/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + ownerToken)
+                .content("""
+                        {
+                          "title": "Unassigned task",
+                          "priority": "LOW"
+                        }
+                        """))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/projects/" + projectId + "/stats")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.byStatus.TODO").value(greaterThanOrEqualTo(1)))
+                .andExpect(jsonPath("$.byStatus.IN_PROGRESS").value(greaterThanOrEqualTo(0)))
+                .andExpect(jsonPath("$.byStatus.DONE").value(greaterThanOrEqualTo(0)))
+                .andExpect(jsonPath("$.total").value(greaterThanOrEqualTo(1)))
+                .andExpect(jsonPath("$.byAssignee[?(@.name == 'Unassigned')]").exists());
+    }
+
+    @Test
+    void getStats_emptyProject_returnsZeroCounts() throws Exception {
+        // fresh project with no tasks
+        String response = mockMvc.perform(post("/projects")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + ownerToken)
+                .content("""
+                        { "name": "Empty Project" }
+                        """))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        String emptyProjectId = objectMapper.readTree(response).get("id").asText();
+
+        mockMvc.perform(get("/projects/" + emptyProjectId + "/stats")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.byStatus.TODO").value(0))
+                .andExpect(jsonPath("$.byStatus.IN_PROGRESS").value(0))
+                .andExpect(jsonPath("$.byStatus.DONE").value(0))
+                .andExpect(jsonPath("$.byAssignee").isEmpty())
+                .andExpect(jsonPath("$.total").value(0));
+    }
+
+    @Test
+    void getStats_projectNotFound_returns404() throws Exception {
+        mockMvc.perform(get("/projects/00000000-0000-0000-0000-000000000000/stats")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Project not found"));
+    }
 }

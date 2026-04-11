@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import com.taskflow.common.PagedResponse;
+import com.taskflow.task.dto.TaskStatsResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -55,5 +56,12 @@ public class TaskController {
             Authentication auth) {
         UUID currentUserId = UUID.fromString(auth.getName());
         taskService.deleteTask(taskId, currentUserId);
+    }
+
+    @GetMapping("/projects/{projectId}/stats")
+    public TaskStatsResponse getStats(
+            @PathVariable UUID projectId,
+            Authentication authentication) {
+        return taskService.getStats(projectId);
     }
 }

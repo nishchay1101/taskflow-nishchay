@@ -9,12 +9,17 @@ import com.taskflow.task.dto.TaskResponse;
 import com.taskflow.task.dto.UpdateTaskRequest;
 import com.taskflow.user.User;
 import com.taskflow.user.UserRepository;
+import com.taskflow.task.dto.TaskStatsResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.taskflow.common.PagedResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.ArrayList;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +38,8 @@ public class TaskService {
         if (!projectRepository.existsById(projectId)) {
             throw new ResourceNotFoundException("Project not found");
         }
+        page = Math.max(page, 1);
+        limit = Math.max(limit, 1);
         int clampedLimit = Math.min(limit, 100);
         Pageable pageable = PageRequest.of(page - 1, clampedLimit);
 
@@ -149,5 +156,37 @@ public class TaskService {
         }
 
         taskRepository.delete(task);
+    }
+
+    @Transactional(readOnly = true)
+    public TaskStatsResponse getStats(UUID projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ResourceNotFoundException("Project not found");
+        }
+
+        // by status
+        Map<String, Long> byStatus = new LinkedHashMap<>();
+        for (TaskStatus s : TaskStatus.values()) byStatus.put(s.name(), 0L);
+        for (Object[] row : taskRepository.countByStatus(projectId)) {
+            byStatus.put(((TaskStatus) row[0]).name(), (Long) row[1]);
+        }
+
+        // by assignee
+        List<TaskStatsResponse.AssigneeStats> byAssignee = new ArrayList<>();
+        for (Object[] row : taskRepository.countByAssignee(projectId)) {
+            User assignee = (User) row[0];
+            long count = (Long) row[1];
+            if (assignee == null) {
+                byAssignee.add(new TaskStatsResponse.AssigneeStats(null, "Unassigned", count));
+            } else {
+                byAssignee.add(new TaskStatsResponse.AssigneeStats(
+                        assignee.getId().toString(),
+                        assignee.getName(),
+                        count));
+            }
+        }
+
+        long total = byStatus.values().stream().mapToLong(Long::longValue).sum();
+        return new TaskStatsResponse(byStatus, byAssignee, total);
     }
 }

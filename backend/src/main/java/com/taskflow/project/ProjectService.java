@@ -7,6 +7,7 @@ import com.taskflow.project.dto.ProjectResponse;
 import com.taskflow.project.dto.UpdateProjectRequest;
 import com.taskflow.user.User;
 import com.taskflow.user.UserRepository;
+import com.taskflow.task.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +27,13 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional(readOnly = true)
     public PagedResponse<ProjectResponse> listProjects(UUID userId, int page, int limit) {
+        page = Math.max(page, 1);
+        limit = Math.max(limit, 1);
         int clampedLimit = Math.min(limit, 100);
-        int offset = (page - 1) * clampedLimit;
         Pageable pageable = PageRequest.of(page - 1, clampedLimit);
 
         List<ProjectResponse> data = projectRepository
@@ -90,7 +93,9 @@ public class ProjectService {
             throw new ForbiddenException("Only the project owner can delete this project");
         }
         log.info("Project deleted: {} by user: {}", projectId, userId);
+        taskRepository.deleteByProjectId(projectId);
         projectRepository.delete(project);
+        projectRepository.flush(); // Ensure we don't encounter deferred delete foreign-key violations
     }
 
     private Project findProjectOrThrow(UUID projectId) {
