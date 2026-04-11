@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -40,6 +43,7 @@ public class ProjectService {
 
         Project saved = projectRepository.save(project);
         projectRepository.flush(); // force DB write
+        log.info("Project created: {} by user: {}", saved.getId(), userId);
         return toResponse(projectRepository.findByIdWithOwner(saved.getId()).orElseThrow());
     }
 
@@ -62,7 +66,7 @@ public class ProjectService {
         if (request.description() != null) {
             project.setDescription(request.description());
         }
-
+        log.info("Project updated: {} by user: {}", projectId, userId);
         return toResponse(projectRepository.save(project));
     }
 
@@ -73,7 +77,7 @@ public class ProjectService {
         if (!project.getOwner().getId().equals(userId)) {
             throw new ForbiddenException("Only the project owner can delete this project");
         }
-
+        log.info("Project deleted: {} by user: {}", projectId, userId);
         projectRepository.delete(project);
     }
 

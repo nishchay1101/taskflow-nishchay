@@ -44,4 +44,12 @@ public class JwtService {
                 .getPayload();
         return UUID.fromString(claims.getSubject());
     }
+
+    public Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(signingKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
 }

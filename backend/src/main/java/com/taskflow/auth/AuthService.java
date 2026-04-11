@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import com.taskflow.common.exception.DuplicateEmailException;
 import com.taskflow.common.exception.InvalidCredentialsException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -31,6 +34,7 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+        log.info("User registered: {}", user.getId());
         String token = jwtService.generateToken(user);
         return toAuthResponse(token, user);
     }
@@ -42,7 +46,7 @@ public class AuthService {
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
-
+        log.info("User logged in: {}", user.getId());
         String token = jwtService.generateToken(user);
         return toAuthResponse(token, user);
     }
