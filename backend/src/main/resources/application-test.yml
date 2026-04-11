@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:16:///taskflow
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    default-property-inclusion: non_absent
+    deserialization:
+      fail-on-unknown-properties: false
+
+app:
+  jwt:
+    secret: VGVzdFNlY3JldEtleVRoYXRJc0xvZ25Fbm91Z2hGb3JIUzI1NiE=
+    expiration-ms: 86400000
+    
+  bcrypt:
+    strength: 4
