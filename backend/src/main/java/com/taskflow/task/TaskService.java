@@ -86,28 +86,33 @@ public class TaskService {
         }
 
         // Apply only fields that were present in the request body
-        if (req.title() != null && req.title().isPresent()) {
+        if (req.title().isPresent()) {
             String newTitle = req.title().get();
             if (newTitle != null && !newTitle.isBlank()) {
                 task.setTitle(newTitle);
             }
         }
-        if (req.description() != null && req.description().isPresent()) {
-            task.setDescription(req.description().get()); // null = clear description
+
+        if (req.description().isPresent()) {
+            task.setDescription(req.description().get());
         }
-        if (req.status() != null && req.status().isPresent()) {
+
+        if (req.status().isPresent() && req.status().get() != null) {
             task.setStatus(req.status().get());
         }
-        if (req.priority() != null && req.priority().isPresent()) {
+
+        if (req.priority().isPresent() && req.priority().get() != null) {
             task.setPriority(req.priority().get());
         }
-        if (req.dueDate() != null && req.dueDate().isPresent()) {
+
+        if (req.dueDate().isPresent()) {
             task.setDueDate(req.dueDate().get()); // null = clear due date
         }
-        if (req.assigneeId() != null && req.assigneeId().isPresent()) {
+
+        if (req.assigneeId().isPresent()) {
             UUID newAssigneeId = req.assigneeId().get();
             if (newAssigneeId == null) {
-                task.setAssignee(null); // explicit clear
+                task.setAssignee(null); // {"assigneeId": null} → clear assignee
             } else {
                 if (!userRepository.existsById(newAssigneeId)) {
                     throw new ResourceNotFoundException("Assignee not found");
