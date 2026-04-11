@@ -1,7 +1,5 @@
 # TaskFlow
 
-A backend REST API for task management built as a take-home assignment for a Backend Engineer role. Supports project and task CRUD, JWT authentication, role-based authorization, pagination, and project stats.
-
 ## Overview
 
 TaskFlow is a REST API for team-based task management. Users can create projects, assign tasks, track status, and filter by assignee or priority. Built as a take-home assignment for a Backend Engineer role at Zomato.
@@ -64,19 +62,42 @@ cd backend
 ./gradlew clean test
 ```
 
-Tests use Testcontainers (real PostgreSQL, not H2). Covers auth flows, project CRUD authorization, task filtering, and delete permissions. Docker must be running. No other setup needed.
+Tests use Testcontainers (real PostgreSQL, not H2). Covers auth flows, project CRUD authorization, task filtering, pagination, stats, and delete permissions. Docker must be running. No other setup needed.
 
 ---
 
-## Test Credentials
+## Seed Data
 
-The seed migration (`V4__seed_data.sql`) creates:
+The seed migration (`V4__seed_data.sql`) creates 3 users, 3 projects, and 6 tasks with varied statuses, priorities, and assignees so all features are immediately demonstrable without creating data manually.
 
-| Field | Value |
-|---|---|
-| Email | test@example.com |
-| Password | password123 |
-| BCrypt cost | 12 |
+### Users
+
+All passwords are `password123` (BCrypt cost 12).
+
+| Name | Email | Role across projects |
+|---|---|---|
+| Arjun Sharma | test@example.com | Owner of Project 1 and 3, assignee in Project 2 |
+| Priya Mehta | priya@example.com | Owner of Project 2, assignee in Project 1 |
+| Rohan Verma | rohan@example.com | Assignee in Project 1 and 3 |
+
+### Projects
+
+| Project | Owner | Description |
+|---|---|---|
+| Zomato Payments Revamp | Arjun Sharma | Payment gateway integration |
+| Rider App Redesign | Priya Mehta | Rider-facing mobile app UX |
+| Internal Analytics Dashboard | Arjun Sharma | Ops delivery metrics dashboard |
+
+### Tasks
+
+| Title | Project | Status | Priority | Assignee |
+|---|---|---|---|---|
+| Integrate Razorpay webhook handler | Payments Revamp | IN_PROGRESS | HIGH | Priya Mehta |
+| Write unit tests for payment service | Payments Revamp | TODO | MEDIUM | Rohan Verma |
+| Deprecate old payment gateway endpoints | Payments Revamp | DONE | LOW | — |
+| Redesign rider earnings screen | Rider App Redesign | TODO | HIGH | Arjun Sharma |
+| Fix map rendering lag on low-end devices | Rider App Redesign | IN_PROGRESS | MEDIUM | — |
+| Build delivery heatmap query | Analytics Dashboard | DONE | HIGH | Rohan Verma |
 
 ---
 
@@ -130,20 +151,20 @@ curl -s -X DELETE http://localhost:8080/projects/<project-id> \
 
 ```bash
 # List tasks (paginated, filterable)
-curl -s "http://localhost:8080/projects/<project-id>/tasks?status=in_progress&page=1&limit=20" \
+curl -s "http://localhost:8080/projects/<project-id>/tasks?status=IN_PROGRESS&page=1&limit=20" \
   -H "Authorization: Bearer <token>"
 
 # Create task (owner only)
 curl -s -X POST http://localhost:8080/projects/<project-id>/tasks \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
-  -d '{"title":"Fix bug","priority":"high","dueDate":"2025-12-31"}'
+  -d '{"title":"Fix bug","priority":"HIGH","dueDate":"2025-12-31"}'
 
 # Update task (owner or assignee)
 curl -s -X PATCH http://localhost:8080/tasks/<task-id> \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
-  -d '{"status":"in_progress"}'
+  -d '{"status":"IN_PROGRESS"}'
 
 # Delete task (owner or creator)
 curl -s -X DELETE http://localhost:8080/tasks/<task-id> \
@@ -161,12 +182,13 @@ curl -s http://localhost:8080/projects/<project-id>/stats \
 Response:
 ```json
 {
-  "byStatus": { "todo": 5, "in_progress": 3, "done": 12 },
+  "byStatus": { "TODO": 2, "IN_PROGRESS": 1, "DONE": 1 },
   "byAssignee": [
-    { "userId": "uuid", "name": "Jane", "count": 8 },
-    { "userId": null, "name": "Unassigned", "count": 4 }
+    { "userId": "uuid", "name": "Priya Mehta", "count": 1 },
+    { "userId": "uuid", "name": "Rohan Verma", "count": 1 },
+    { "userId": null, "name": "Unassigned", "count": 1 }
   ],
-  "total": 20
+  "total": 3
 }
 ```
 
