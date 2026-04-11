@@ -13,6 +13,6 @@ INSERT INTO projects (id, name, description, owner_id) VALUES (
 );
 
 INSERT INTO tasks (title, status, priority, project_id, creator_id) VALUES
-    ('Set up project structure', 'done',        'high',   'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
-    ('Implement auth',          'in_progress',  'high',   'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
-    ('Write tests',             'todo',         'medium', 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11');
+    ('Set up project structure', 'DONE',        'HIGH',   'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+    ('Implement auth',          'IN_PROGRESS',  'HIGH',   'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+    ('Write tests',             'TODO',         'MEDIUM', 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11');
