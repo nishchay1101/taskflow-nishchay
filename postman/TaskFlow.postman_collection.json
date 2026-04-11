@@ -82,7 +82,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"email\": \"arjun@example.com\",\n  \"password\": \"password123\"\n}"
             }
           },
           "event": [
@@ -201,7 +201,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Duplicate\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"name\": \"Duplicate\",\n  \"email\": \"arjun@example.com\",\n  \"password\": \"password123\"\n}"
             }
           }
         },
@@ -218,7 +218,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+              "raw": "{\n  \"email\": \"arjun@example.com\",\n  \"password\": \"wrongpassword\"\n}"
             }
           }
         },

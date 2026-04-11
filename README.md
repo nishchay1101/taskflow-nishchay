@@ -50,7 +50,7 @@ That's it. Flyway migrations run automatically on startup. The API is available 
 ```bash
 curl -s -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"password123"}' | jq .
+  -d '{"email":"arjun@example.com","password":"password123"}' | jq .
 ```
 
 You should receive a JWT token in the response.
@@ -76,7 +76,7 @@ All passwords are `password123` (BCrypt cost 12).
 
 | Name | Email | Role across projects |
 |---|---|---|
-| Arjun Sharma | test@example.com | Owner of Project 1 and 3, assignee in Project 2 |
+| Arjun Sharma | arjun@example.com | Owner of Project 1 and 3, assignee in Project 2 |
 | Priya Mehta | priya@example.com | Owner of Project 2, assignee in Project 1 |
 | Rohan Verma | rohan@example.com | Assignee in Project 1 and 3 |
 
@@ -116,7 +116,7 @@ curl -s -X POST http://localhost:8080/auth/register \
 # Login
 curl -s -X POST http://localhost:8080/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"password123"}'
+  -d '{"email":"arjun@example.com","password":"password123"}'
 ```
 
 ### Projects

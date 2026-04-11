@@ -9,22 +9,22 @@ INSERT INTO users (id, name, email, password, created_at) VALUES
 (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'Arjun Sharma',
-    'test@example.com',
-    '$2a$12$RgpCbDBKlYvTbBUqKLgGUu/KqGNF8GkM5q3TOFJMOLkC.GZX6BGFW',
+    'arjun@example.com',
+    '$2b$12$edyJWHpdWDQFNrn39LVQMOxCl82LFc7zrmIq7nQWqVPHX4XtiNjkG',
     NOW()
 ),
 (
     'b1ffcd00-1d2c-4fa9-ac7e-7cc0ce491b22',
     'Priya Mehta',
     'priya@example.com',
-    '$2a$12$RgpCbDBKlYvTbBUqKLgGUu/KqGNF8GkM5q3TOFJMOLkC.GZX6BGFW',
+    '$2b$12$edyJWHpdWDQFNrn39LVQMOxCl82LFc7zrmIq7nQWqVPHX4XtiNjkG',
     NOW()
 ),
 (
     'c2aade11-2e3d-4ba0-bd8f-8dd1df502c33',
     'Rohan Verma',
     'rohan@example.com',
-    '$2a$12$RgpCbDBKlYvTbBUqKLgGUu/KqGNF8GkM5q3TOFJMOLkC.GZX6BGFW',
+    '$2b$12$edyJWHpdWDQFNrn39LVQMOxCl82LFc7zrmIq7nQWqVPHX4XtiNjkG',
     NOW()
 );
 
