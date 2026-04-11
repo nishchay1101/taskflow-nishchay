@@ -24,7 +24,7 @@ spring.lifecycle.timeout-per-shutdown-phase: 30s
 
 app:
   jwt:
-    secret: ${JWT_SECRET}
+    secret: ${JWT_SECRET:IZLBxAN2q/BckdSyABcspGms0D0yo+wKHb9YPIamuIA=}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
   bcrypt:
     strength: ${BCRYPT_STRENGTH:12}
