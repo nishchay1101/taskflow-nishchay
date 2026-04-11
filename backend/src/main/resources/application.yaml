@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:taskflow}
     username: ${POSTGRES_USER:taskflow}
-    password: ${POSTGRES_PASSWORD:taskflow_secret}
+    password: ${POSTGRES_PASSWORD}          # required — no default, fail fast if missing
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -24,7 +24,7 @@ spring.lifecycle.timeout-per-shutdown-phase: 30s
 
 app:
   jwt:
-    secret: ${JWT_SECRET:IZLBxAN2q/BckdSyABcspGms0D0yo+wKHb9YPIamuIA=}
+    secret: ${JWT_SECRET}                   # required — no default, fail fast if missing
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
   bcrypt:
     strength: ${BCRYPT_STRENGTH:12}
