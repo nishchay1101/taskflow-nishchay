@@ -1,12 +1,16 @@
 package com.taskflow;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class TaskFlowApplicationTests {
 
     @Test
     void contextLoads() {
-        // Integration tests with real DB live in Phase 9 with Testcontainers
-        // This stub exists so the build passes without a local Postgres
+        // Verifies the full Spring application context boots successfully
+        // against a real PostgreSQL instance provided by Testcontainers (test profile)
     }
 }
