@@ -2,7 +2,7 @@ package com.taskflow;
 
 import org.junit.jupiter.api.Test;
 
-class TaskflowApplicationTests {
+class TaskFlowApplicationTests {
 
     @Test
     void contextLoads() {
