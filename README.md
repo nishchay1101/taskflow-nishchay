@@ -83,6 +83,26 @@ curl -s -X POST http://localhost:8080/auth/login \
 
 You should receive a JWT token in the response.
 
+### Postman Collection
+
+A ready-to-use Postman collection is included at `postman/TaskFlow.postman_collection.json`. Import it into Postman to explore and test every endpoint without writing a single curl command.
+
+1. Import `postman/TaskFlow.postman_collection.json` into Postman
+2. Run **1. Auth → Login as Arjun**, **Login as Priya**, **Login as Rohan** — tokens are auto-saved to collection variables
+3. All subsequent requests use the saved tokens automatically — no manual copy-paste
+
+| Folder | Scenarios |
+|---|---|
+| **1. Auth** | Login all 3 seed users, register new user, duplicate email (409), wrong password (401), unknown email (401), missing fields (400), no token (401), garbage token (401) |
+| **2. Projects — Seed Data** | List projects per user, paginated list, get each project, PATCH as owner (200) vs non-owner (403), page clamping, 404 |
+| **3. Projects — Create & Delete** | Create project (auto-saves ID), missing name (400), delete as non-owner (403), delete as owner (204), verify deleted (404) |
+| **4. Tasks — Seed Data** | List tasks, filter by TODO / IN\_PROGRESS / DONE, paginated list, page overflow (empty), invalid status (400), update as owner (200), update as assignee (200), update as stranger (403), empty body no-op (200), clear assignee (null), assign to new user, cascade delete project → tasks gone (404) |
+| **5. Tasks — Create** | Create task as owner (201, status=TODO auto-saved), create as non-owner (403), missing title (400), invalid priority (400), delete created task (cleanup 204) |
+| **6. Stats** | Stats for all 3 projects (status breakdown + assignee counts), project not found (404), unauthenticated (401) |
+| **7. Error Cases** | Malformed JSON body (400), invalid UUID path param (400/404) |
+
+All seed UUIDs are pre-filled in collection variables — no setup needed beyond logging in.
+
 ### Running tests
 
 ```bash
