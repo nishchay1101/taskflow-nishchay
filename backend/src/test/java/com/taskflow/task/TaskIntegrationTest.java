@@ -114,7 +114,8 @@ public class TaskIntegrationTest extends BaseIntegrationTest {
         mockMvc.perform(get("/projects/" + projectId + "/tasks?status=TODO")
                 .header("Authorization", "Bearer " + ownerToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*].status", everyItem(is("TODO"))));
+                .andExpect(jsonPath("$.data[*].status", everyItem(is("TODO"))))
+                .andExpect(jsonPath("$.data", hasSize(greaterThanOrEqualTo(1))));
     }
 
     @Test

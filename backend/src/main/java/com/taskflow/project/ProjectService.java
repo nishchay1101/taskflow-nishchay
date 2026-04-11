@@ -10,6 +10,9 @@ import com.taskflow.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.taskflow.common.PagedResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,11 +27,20 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
-    public List<ProjectResponse> listProjects(UUID userId) {
-        return projectRepository.findAllAccessibleByUserId(userId)
+    @Transactional(readOnly = true)
+    public PagedResponse<ProjectResponse> listProjects(UUID userId, int page, int limit) {
+        int clampedLimit = Math.min(limit, 100);
+        int offset = (page - 1) * clampedLimit;
+        Pageable pageable = PageRequest.of(page - 1, clampedLimit);
+
+        List<ProjectResponse> data = projectRepository
+                .findAllAccessibleByUserId(userId, pageable)
                 .stream()
-                .map(this::toResponse)
+                .map(ProjectResponse::from)
                 .toList();
+
+        long total = projectRepository.countAllAccessibleByUserId(userId);
+        return PagedResponse.of(data, page, clampedLimit, total);
     }
 
     @Transactional

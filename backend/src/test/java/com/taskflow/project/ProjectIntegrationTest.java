@@ -77,7 +77,31 @@ public class ProjectIntegrationTest extends BaseIntegrationTest {
         mockMvc.perform(get("/projects")
                 .header("Authorization", "Bearer " + ownerToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(2))));
+                .andExpect(jsonPath("$.data", hasSize(greaterThanOrEqualTo(2))));
+    }
+
+    @Test
+    void listProjects_withPagination_returnsCorrectPages() throws Exception {
+        createProject(ownerToken, "Proj 1");
+        createProject(ownerToken, "Proj 2");
+        createProject(ownerToken, "Proj 3");
+
+        // Ask for Page 1, Size 2
+        mockMvc.perform(get("/projects?page=1&limit=2")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(2))) // Should only contain 2 items
+                .andExpect(jsonPath("$.page").value(1))
+                .andExpect(jsonPath("$.limit").value(2))
+                .andExpect(jsonPath("$.total").value(3))
+                .andExpect(jsonPath("$.totalPages").value(2)); // 3 items / 2 limit = ceil(1.5) = 2 pages
+
+        // Ask for Page 2, Size 2
+        mockMvc.perform(get("/projects?page=2&limit=2")
+                .header("Authorization", "Bearer " + ownerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1))) // Should contain the remaining 1 item
+                .andExpect(jsonPath("$.page").value(2));
     }
 
     @Test

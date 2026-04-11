@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.taskflow.common.PagedResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,9 +21,12 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public List<ProjectResponse> listProjects(Authentication authentication) {
-        UUID userId = (UUID) authentication.getPrincipal();
-        return projectService.listProjects(userId);
+    public PagedResponse<ProjectResponse> listProjects(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int limit,
+            Authentication authentication) {
+        UUID currentUserId = (UUID) authentication.getPrincipal();
+        return projectService.listProjects(currentUserId, page, limit);
     }
 
     @PostMapping

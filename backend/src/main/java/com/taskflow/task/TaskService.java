@@ -12,6 +12,9 @@ import com.taskflow.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.taskflow.common.PagedResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,16 +28,22 @@ public class TaskService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<TaskResponse> listTasks(UUID projectId, TaskStatus status, UUID assigneeId) {
-        // Verify project exists
+    public PagedResponse<TaskResponse> listTasks(UUID projectId, TaskStatus status,
+                                                UUID assigneeId, int page, int limit) {
         if (!projectRepository.existsById(projectId)) {
             throw new ResourceNotFoundException("Project not found");
         }
-        return taskRepository
-                .findByProjectIdFiltered(projectId, status, assigneeId)
+        int clampedLimit = Math.min(limit, 100);
+        Pageable pageable = PageRequest.of(page - 1, clampedLimit);
+
+        List<TaskResponse> data = taskRepository
+                .findByProjectIdFiltered(projectId, status, assigneeId, pageable)
                 .stream()
                 .map(TaskResponse::from)
                 .toList();
+
+        long total = taskRepository.countByProjectIdFiltered(projectId, status, assigneeId);
+        return PagedResponse.of(data, page, clampedLimit, total);
     }
 
     @Transactional
