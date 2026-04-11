@@ -16,10 +16,10 @@ services:
       - "5433:5432"
 
   api:
-    # Option A — fastest: pull pre-built image, no compilation needed
-    image: gotsphinx/taskflow-api:latest
-    # Option B — build from source (comment out image: above and uncomment below)
-    # build: ./backend
+    # Option A — build from source (~3-5 min first build, cached after)
+    build: ./backend
+    # Option B — pre-built image, no compilation (~30 seconds)
+    # image: gotsphinx/taskflow-api:latest
     depends_on:
       db:
         condition: service_healthy

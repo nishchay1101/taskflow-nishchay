@@ -31,9 +31,7 @@ The focus is on correctness, clean API design, and production patterns — not f
 
 ---
 
-### ⚡ Option A — Pre-built image (fastest, ~30 seconds)
-
-No compilation. Docker pulls the pre-built image directly from Docker Hub.
+### ⚡ Option A — Build from source (default)
 
 ```bash
 # 1. Clone the repo
@@ -43,32 +41,22 @@ cd taskflow-nishchay
 # 2. Copy env file
 cp .env.example .env
 
-# 3. Pull and start
-docker compose up -d
-```
-
-The `docker-compose.yml` is already configured to use `gotsphinx/taskflow-api:latest` — no changes needed.
-
----
-
-### 🔨 Option B — Build from source (~3-5 min)
-
-If you want to compile the code yourself:
-
-```bash
-# 1. Clone and copy env
-git clone https://github.com/nishchay1101/taskflow-nishchay.git
-cd taskflow-nishchay
-cp .env.example .env
-
-# 2. In docker-compose.yml, comment out the image: line and uncomment build:
-#    image: nishchay1101/taskflow-api:latest  ← comment this out
-#    build: ./backend                          ← uncomment this
-
 # 3. Build and start
 docker compose up --build
 ```
 
+First build takes 3-5 minutes (Gradle + Docker layer caching). Subsequent builds are fast.
+
+### 🚀 Option B — Pre-built image (~30 seconds)
+
+If you want to skip compilation, in `docker-compose.yml` comment out `build:` and uncomment `image:`:
+
+```yaml
+# build: ./backend
+image: gotsphinx/taskflow-api:latest
+```
+
+Then run `docker compose up`.
 ---
 
 That's it. Flyway migrations run automatically on startup. The API is available at `http://localhost:8080`.
@@ -118,15 +106,19 @@ Tests use Testcontainers (real PostgreSQL, not H2). Covers auth flows, project C
 
 The seed migration (`V4__seed_data.sql`) creates 3 users, 3 projects, and 6 tasks with varied statuses, priorities, and assignees so all features are immediately demonstrable without creating data manually.
 
-### Users
+## Test Credentials
 
 All passwords are `password123` (BCrypt cost 12).
 
-| Name | Email | Role across projects |
+| Name | Email | Quick description |
 |---|---|---|
-| Arjun Sharma | arjun@example.com | Owner of Project 1 and 3, assignee in Project 2 |
-| Priya Mehta | priya@example.com | Owner of Project 2, assignee in Project 1 |
-| Rohan Verma | rohan@example.com | Assignee in Project 1 and 3 |
+| Arjun Sharma | arjun@example.com | Owner of Projects 1 & 3 |
+| Priya Mehta | priya@example.com | Owner of Project 2 |
+| Rohan Verma | rohan@example.com | Assignee only, owns nothing |
+
+**Start here:** login as `arjun@example.com` — he owns two projects and has the most to explore.
+
+3 users are seeded (instead of the spec's minimum of 1) to make authorization scenarios immediately demonstrable — owner-only enforcement, assignee permissions, and 403 responses all require at least two distinct users.
 
 ### Projects
 
@@ -336,6 +328,14 @@ Getting this wrong causes silent data loss that's very hard to debug.
 | List tasks | Any authenticated user (open read, no membership concept) |
 
 List tasks is intentionally open-read. Restricting it would require a project membership model — a deliberate scope decision documented below.
+
+### Intentional scope cuts
+
+Two features were deliberately deferred rather than implemented half-baked:
+
+**Project membership model** — list tasks is currently open-read for any authenticated user. Restricting it properly would require a `project_members` join table, add/remove member endpoints, and membership checks on every task and project operation. Doing this partially (e.g. restricting list but not stats) would create inconsistent authorization behaviour worse than not having it. It's documented in "What I'd Do With More Time" with the exact schema change needed.
+
+**Field-level role restrictions** — assignees can currently update any task field, not just `status`. A real product would restrict assignees to status-only updates. Deferred because it requires a more granular permission check per field, not just per endpoint.
 
 ### Cascade delete
 
