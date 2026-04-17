@@ -2,7 +2,7 @@
 
 ## Overview
 
-TaskFlow is a REST API for team-based task management. Users can create projects, assign tasks, track status, and filter by assignee or priority. Built as a take-home assignment for a Backend Engineer role at Zomato.
+TaskFlow is a REST API for team-based task management. Users can create projects, assign tasks, track status, and filter by assignee or priority. 
 
 The focus is on correctness, clean API design, and production patterns — not features.
 
@@ -125,7 +125,7 @@ All passwords are `password123` (BCrypt cost 12).
 
 | Project | Owner | Description |
 |---|---|---|
-| Zomato Payments Revamp | Arjun Sharma | Payment gateway integration |
+| Payments Revamp | Arjun Sharma | Payment gateway integration |
 | Rider App Redesign | Priya Mehta | Rider-facing mobile app UX |
 | Internal Analytics Dashboard | Arjun Sharma | Ops delivery metrics dashboard |
 
